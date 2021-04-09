@@ -1,39 +1,42 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AccountsSDK from "@livechat/accounts-sdk";
 
 const options = {
-  client_id: "xxx",
+  client_id: "9541d38e7c9f97bc4876933c319c057c",
+  prompt: "consent",
 };
+
+const instance = new AccountsSDK(options);
 
 const useAuth = () => {
   const [data, setData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  useEffect(() => {
-    const fetchAccount = async () => {
-      try {
-        setIsLoggedIn(false);
-        setIsLoggingIn(true);
-        setData(null);
+  const authorizeWithRedirect = async () => {
+    const authData = await instance.redirect(options).authorize();
+    console.log("authData", authData);
+  };
 
-        const instance = new AccountsSDK(options);
-        const data = await instance.iframe(options).authorize();
+  const authorizeWithPopup = async () => {
+    try {
+      setIsLoggingIn(true);
+      setIsLoggedIn(false);
 
-        setIsLoggedIn(true);
-        setData(data);
-      } catch (error) {
-        console.log("error", error);
-        setData(null);
-      } finally {
-        setIsLoggingIn(false);
-      }
-    };
-
-    fetchAccount();
-  }, []);
+      const authData = await instance.popup(options).authorize();
+      setData(authData);
+      setIsLoggedIn(true);
+    } catch (error) {
+      setData(null);
+      setIsLoggedIn(false);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
 
   return {
+    authorizeWithPopup,
+    authorizeWithRedirect,
     data,
     isLoggedIn,
     isLoggingIn,
