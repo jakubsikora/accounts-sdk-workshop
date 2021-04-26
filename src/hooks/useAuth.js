@@ -3,7 +3,6 @@ import AccountsSDK from "@livechat/accounts-sdk";
 
 const options = {
   client_id: "9541d38e7c9f97bc4876933c319c057c",
-  prompt: "consent",
 };
 
 const instance = new AccountsSDK(options);
@@ -14,8 +13,12 @@ const useAuth = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const authorizeWithRedirect = async () => {
-    const authData = await instance.redirect(options).authorize();
-    console.log("authData", authData);
+    try {
+      const authData = await instance.redirect(options).authorizeData();
+      return authData;
+    } catch (error) {
+      await instance.redirect(options).authorize();
+    }
   };
 
   const authorizeWithPopup = async () => {

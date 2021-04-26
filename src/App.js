@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@livechat/design-system";
 import useAuth from "./hooks/useAuth";
 
@@ -10,13 +10,15 @@ const App = () => {
     authorizeWithRedirect,
     data,
   } = useAuth();
+  const [authData, setAuthData] = useState(null);
 
   useEffect(() => {
-    console.log("url", window.location.href);
+    const authorize = async () => {
+      const data = await authorizeWithRedirect();
+      console.log("data", data);
+    };
 
-    if (window.location.hash.indexOf("#access_token") === -1) {
-      authorizeWithRedirect();
-    }
+    authorize();
   }, []);
 
   const authorize = async () => {

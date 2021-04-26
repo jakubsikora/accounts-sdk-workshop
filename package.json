@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.35",
-    "@livechat/accounts-sdk": "^2.0.1",
+    "@livechat/accounts-sdk": "^2.0.2",
     "@livechat/agent-app-sdk": "^1.5.1",
     "@livechat/design-system": "^0.10.1",
     "@livechat/design-system-colors": "^1.1.2",
