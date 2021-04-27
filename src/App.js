@@ -1,45 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@livechat/design-system";
 import useAuth from "./hooks/useAuth";
+import lcApi from "./api/lc";
 
 const App = () => {
-  const {
-    isLoggedIn,
-    isLoggingIn,
-    authorizeWithPopup,
-    authorizeWithRedirect,
-    data,
-  } = useAuth();
-  const [authData, setAuthData] = useState(null);
+  const { isLoggedIn, isLoggingIn, authorizeWithRedirect, data } = useAuth();
+  const [agents, setAgents] = useState([]);
 
   useEffect(() => {
+    const initData = async () => {
+      try {
+        const agents = await lcApi.getAgents();
+        setAgents(agents);
+      } catch (error) {
+        console.log("initData error", error);
+        setAgents([]);
+      }
+    };
+
     const authorize = async () => {
-      const data = await authorizeWithRedirect();
-      console.log("data", data);
+      try {
+        await authorizeWithRedirect();
+        await initData();
+      } catch (error) {
+        console.log("authorize error", error);
+      }
     };
 
     authorize();
   }, []);
 
-  const authorize = async () => {
-    await authorizeWithPopup();
-  };
+  console.log("data", data);
 
   if (isLoggingIn) {
     return "Loading...";
   }
 
   if (!isLoggedIn) {
-    return (
-      <Button onClick={authorize} kind="primary">
-        Sign in with LiveChat
-      </Button>
-    );
+    return "Error";
   }
 
-  console.log("data", data);
-
-  return <div className="App">All good!</div>;
+  return (
+    <div className="App">
+      {agents.map((agent) => (
+        <div>
+          <img src={agent.avatar_path} /> <span>{agent.id}</span>{" "}
+          <span>{agent.name}</span> <span>{agent.role}</span>
+          <button type="button">Approve</button>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default App;

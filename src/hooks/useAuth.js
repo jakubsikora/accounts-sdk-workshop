@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AccountsSDK from "@livechat/accounts-sdk";
+import lcApi from "../api/lc";
 
 const options = {
   client_id: "9541d38e7c9f97bc4876933c319c057c",
@@ -14,9 +15,16 @@ const useAuth = () => {
 
   const authorizeWithRedirect = async () => {
     try {
+      setIsLoggingIn(true);
       const authData = await instance.redirect(options).authorizeData();
-      return authData;
+      lcApi.setToken(authData.access_token);
+      setData(authData);
+      setIsLoggingIn(false);
+      setIsLoggedIn(true);
     } catch (error) {
+      setData(null);
+      setIsLoggingIn(false);
+      setIsLoggedIn(false);
       await instance.redirect(options).authorize();
     }
   };
