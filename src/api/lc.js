@@ -13,7 +13,9 @@ const api = {
     try {
       const { data } = await instance.post(
         "/v3.3/configuration/action/list_agents",
-        {}
+        {
+          fields: ["awaiting_approval"],
+        }
       );
 
       return data;
