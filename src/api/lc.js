@@ -21,7 +21,19 @@ const api = {
       console.log("getAgents error", error);
     }
   },
-  async approveAgent(agentId) {},
+  async approveAgent(agentId) {
+    try {
+      const { data } = await instance.post(
+        "v3.3/configuration/action/approve_agent",
+        {
+          id: agentId,
+        }
+      );
+      return data;
+    } catch (error) {
+      console.log("approveAgent error", error);
+    }
+  },
 };
 
 export default api;

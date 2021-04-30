@@ -42,6 +42,10 @@ const App = () => {
     return "Error";
   }
 
+  const handleButtonClick = (agentId) => {
+    lcApi.approveAgent(agentId);
+  };
+
   return (
     <div className="App">
       {agents.map((agent) => (
@@ -52,7 +56,9 @@ const App = () => {
         >
           <img src={agent.avatar_path} /> <span>{agent.id}</span>{" "}
           <span>{agent.name}</span> <span>{agent.role}</span>
-          <button type="button">Approve</button>
+          <button type="button" onClick={() => handleButtonClick(agent.id)}>
+            Approve
+          </button>
         </div>
       ))}
     </div>
