@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/react";
 import { Button } from "@livechat/design-system";
 import useAuth from "./hooks/useAuth";
 import lcApi from "./api/lc";
@@ -43,7 +45,11 @@ const App = () => {
   return (
     <div className="App">
       {agents.map((agent) => (
-        <div>
+        <div
+          css={css`
+            display: flex;
+          `}
+        >
           <img src={agent.avatar_path} /> <span>{agent.id}</span>{" "}
           <span>{agent.name}</span> <span>{agent.role}</span>
           <button type="button">Approve</button>
