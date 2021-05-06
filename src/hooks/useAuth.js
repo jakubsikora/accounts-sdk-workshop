@@ -3,7 +3,7 @@ import AccountsSDK from "@livechat/accounts-sdk";
 import lcApi from "../api/lc";
 
 const options = {
-  client_id: "9541d38e7c9f97bc4876933c319c057c",
+  client_id: "62c398a05f69cad022be7052243bf2c3",
 };
 
 const instance = new AccountsSDK(options);

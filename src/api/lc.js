@@ -36,6 +36,19 @@ const api = {
       console.log("approveAgent error", error);
     }
   },
+  async denyAgent(agentId) {
+    try {
+      const { data } = await instance.post(
+        "v3.3/configuration/action/delete_agent",
+        {
+          id: agentId,
+        }
+      );
+      return data;
+    } catch (error) {
+      console.log("approveAgent error", error);
+    }
+  },
 };
 
 export default api;

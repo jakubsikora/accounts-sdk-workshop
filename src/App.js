@@ -39,6 +39,28 @@ const rolesStyles = css`
   width: 40%;
 `;
 
+const rolesBadge = css`
+${baseCellStyles};
+background: #FFFFFF;
+border: 1px solid #E2E2E4;
+border-radius: 10px;
+height: 20px;
+width: 94px;
+font-family: Source Sans Pro;
+font-style: normal;
+font-weight: normal;
+font-size: 13px;
+line-height: 16px;
+text-align: center;
+justify-content: center;
+`;
+
+const rolesLogo = css`
+width: 11.72px;
+height: 11.91px;
+padding: 3px
+`;
+
 const actionsStyles = css`
   ${baseCellStyles};
   width: 15%;
@@ -89,8 +111,12 @@ const App = () => {
     return "Error";
   }
 
-  const handleButtonClick = (agentId) => {
+  const handleButtonClickApprove = (agentId) => {
     lcApi.approveAgent(agentId);
+  };
+
+  const handleButtonClickDeny = (agentId) => {
+    lcApi.denyAgent(agentId);
   };
 
   return (
@@ -115,16 +141,18 @@ const App = () => {
             <div css={emailStyles}>{agent.id}</div>
 
             <div css={rolesStyles}>
-              <img src={LCLogo} alt="LiveChat Logo" />
-              {agent.role}
+              <div css={rolesBadge}>
+                <img css={rolesLogo} src={LCLogo} alt="LiveChat Logo" />
+                {agent.role}
+              </div>
             </div>
 
             <div css={actionsStyles}>
-              <Button onClick={() => handleButtonClick(agent.id)}>
+              <Button onClick={() => handleButtonClickApprove(agent.id)}>
                 Approve
               </Button>
 
-              <Button kind="text" css={denyButtonStyles}>
+              <Button kind="text" css={denyButtonStyles} onClick={() => handleButtonClickDeny(agent.id)}>
                 Deny
               </Button>
             </div>
