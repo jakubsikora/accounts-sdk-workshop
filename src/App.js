@@ -6,6 +6,7 @@ import colors from "@livechat/design-system-colors";
 import useAuth from "./hooks/useAuth";
 import lcApi from "./api/lc";
 import Avatar from "./components/Avatar/Avatar";
+import Badge from "./components/Badge/Badge";
 import LCLogo from "./assets/lc.png";
 
 const rowStyles = css`
@@ -52,6 +53,23 @@ const denyButtonStyles = css`
   margin-left: 20px;
 `;
 
+const roleComponentStyles = css`
+  display: flex;
+  align-items: center;
+  border: solid ${colors.gray300} 1px;
+  border-radius: 10px 10px 10px 10px;
+  text-transform: capitalize;
+  font-size: 13px;
+  padding-right: 10px;
+  padding-left: 10px;
+`;
+
+const productLogoStyles = css`
+  margin: 5px 5px 4px 0px;
+  height: 12px;
+  width: 12px;
+`;
+
 const App = () => {
   const { isLoggedIn, isLoggingIn, authorizeWithRedirect, data } = useAuth();
   const [agents, setAgents] = useState([]);
@@ -93,6 +111,10 @@ const App = () => {
     lcApi.approveAgent(agentId);
   };
 
+  const handleOnAgentDenied = (agentId) => {
+    lcApi.deleteAgent(agentId);
+  };
+
   return (
     <div className="App">
       <div css={rowStyles}>
@@ -115,8 +137,10 @@ const App = () => {
             <div css={emailStyles}>{agent.id}</div>
 
             <div css={rolesStyles}>
-              <img src={LCLogo} alt="LiveChat Logo" />
-              {agent.role}
+              <div css={roleComponentStyles}>
+                <img src={LCLogo} alt="LiveChat Logo" css={productLogoStyles} />
+                {agent.role}
+              </div>
             </div>
 
             <div css={actionsStyles}>
@@ -124,7 +148,11 @@ const App = () => {
                 Approve
               </Button>
 
-              <Button kind="text" css={denyButtonStyles}>
+              <Button
+                kind="text"
+                css={denyButtonStyles}
+                onClick={() => handleOnAgentDenied(agent.id)}
+              >
                 Deny
               </Button>
             </div>
