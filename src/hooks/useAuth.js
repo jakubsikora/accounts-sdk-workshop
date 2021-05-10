@@ -12,6 +12,7 @@ const useAuth = () => {
   const [data, setData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  let isOwner;
 
   const authorizeWithRedirect = async () => {
     try {
@@ -29,28 +30,32 @@ const useAuth = () => {
     }
   };
 
-  const authorizeWithPopup = async () => {
-    try {
-      setIsLoggingIn(true);
-      setIsLoggedIn(false);
+  if (data) {
+    isOwner = data.scope.includes("organization--my:rw");
+  }
 
-      const authData = await instance.popup(options).authorize();
-      setData(authData);
-      setIsLoggedIn(true);
-    } catch (error) {
-      setData(null);
-      setIsLoggedIn(false);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
+  // const authorizeWithPopup = async () => {
+  //     try {
+  //       setIsLoggingIn(true);
+  //       setIsLoggedIn(false);
+
+  //       const authData = await instance.popup(options).authorize();
+  //       setData(authData);
+  //       setIsLoggedIn(true);
+  //     } catch (error) {
+  //       setData(null);
+  //       setIsLoggedIn(false);
+  //     } finally {
+  //       setIsLoggingIn(false);
+  //     }
+  //   };
 
   return {
-    authorizeWithPopup,
     authorizeWithRedirect,
     data,
     isLoggedIn,
     isLoggingIn,
+    isOwner,
   };
 };
 
