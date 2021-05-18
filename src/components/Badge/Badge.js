@@ -6,7 +6,7 @@ import colors from "@livechat/design-system-colors";
 const badgeStyles = css`
   display: flex;
   align-items: center;
-  border: solid ${colors.gray300} 1px;
+  border: solid ${colors.gray200} 1px;
   border-radius: 10px 10px 10px 10px;
   text-transform: capitalize;
   font-size: 13px;
@@ -14,10 +14,17 @@ const badgeStyles = css`
   padding-left: 10px;
 `;
 
-const Badge = ({ imageUrl, name }) => {
+const productLogoStyles = css`
+  margin: 5px 5px 4px 0px;
+  height: 12px;
+  width: 12px;
+`;
+
+const Badge = ({ imageUrl, name, children }) => {
   return (
-    <div>
-      <img src={imageUrl} alt={name} css={badgeStyles} />
+    <div css={badgeStyles}>
+      <img src={imageUrl} alt={name} css={productLogoStyles} />
+      {children}
     </div>
   );
 };

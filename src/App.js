@@ -40,6 +40,11 @@ const rolesStyles = css`
   width: 40%;
 `;
 
+const ownershipStyles = css`
+  ${baseCellStyles};
+  width: 40%;
+`;
+
 const actionsStyles = css`
   ${baseCellStyles};
   width: 15%;
@@ -53,25 +58,14 @@ const denyButtonStyles = css`
   margin-left: 20px;
 `;
 
-const roleComponentStyles = css`
-  display: flex;
-  align-items: center;
-  border: solid ${colors.gray300} 1px;
-  border-radius: 10px 10px 10px 10px;
-  text-transform: capitalize;
-  font-size: 13px;
-  padding-right: 10px;
-  padding-left: 10px;
-`;
-
-const productLogoStyles = css`
-  margin: 5px 5px 4px 0px;
-  height: 12px;
-  width: 12px;
-`;
-
 const App = () => {
-  const { isLoggedIn, isLoggingIn, authorizeWithRedirect, data } = useAuth();
+  const {
+    isLoggedIn,
+    isLoggingIn,
+    authorizeWithRedirect,
+    data,
+    isOwner,
+  } = useAuth();
   const [agents, setAgents] = useState([]);
 
   useEffect(() => {
@@ -97,7 +91,7 @@ const App = () => {
     authorize();
   }, []);
 
-  console.log("data", data);
+  //console.log("data", data);
 
   if (isLoggingIn) {
     return "Loading...";
@@ -137,10 +131,9 @@ const App = () => {
             <div css={emailStyles}>{agent.id}</div>
 
             <div css={rolesStyles}>
-              <div css={roleComponentStyles}>
-                <img src={LCLogo} alt="LiveChat Logo" css={productLogoStyles} />
+              <Badge imageUrl={LCLogo} name="LiveChat Logo">
                 {agent.role}
-              </div>
+              </Badge>
             </div>
 
             <div css={actionsStyles}>
@@ -161,6 +154,7 @@ const App = () => {
           <Divider css={dividerStyles} />
         </>
       ))}
+      {isOwner && <p>Logged in as owner</p>}
     </div>
   );
 };
