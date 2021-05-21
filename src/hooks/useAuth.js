@@ -29,28 +29,12 @@ const useAuth = () => {
     }
   };
 
-  // const authorizeWithPopup = async () => {
-  //     try {
-  //       setIsLoggingIn(true);
-  //       setIsLoggedIn(false);
-
-  //       const authData = await instance.popup(options).authorize();
-  //       setData(authData);
-  //       setIsLoggedIn(true);
-  //     } catch (error) {
-  //       setData(null);
-  //       setIsLoggedIn(false);
-  //     } finally {
-  //       setIsLoggingIn(false);
-  //     }
-  //   };
-
   return {
     authorizeWithRedirect,
     data,
     isLoggedIn,
     isLoggingIn,
-    isOwner: data && data.scope.includes("organization--my:rw") ? true : false
+    isOwner: data && data.scope.includes("organization--my:rw") ? true : false,
   };
 };
 

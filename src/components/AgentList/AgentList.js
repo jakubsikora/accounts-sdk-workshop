@@ -1,15 +1,15 @@
-import React from 'react';
+import React from "react";
 import { css, jsx } from "@emotion/react";
 /** @jsx jsx */
-import { Button, Divider } from "@livechat/design-system";
+import { Button, Divider, notificationConnect } from "@livechat/design-system";
 import colors from "@livechat/design-system-colors";
-import Avatar from "./../Avatar/Avatar"
-import Badge from "./../Badge/Badge";
-import LCLogo from "./../../assets/lc.png"
+import LCLogo from "../../assets/lc.png";
+import { formatNotification } from "../../utils";
+import lcApi from "../../api/lc";
+import Avatar from "../Avatar/Avatar";
+import Badge from "../Badge/Badge";
 
-const AgentList = ({agents, header, onApprove, onDelete, isOwner}) => {
-
-  const rowStyles = css`
+const rowStyles = css`
   display: flex;
   padding: 16px 25px;
   background-color: white;
@@ -65,10 +65,24 @@ const headerStyles = css`
   font-size: 16px;
 `;
 
+const AgentList = ({ notificationSystem, agents, header, isOwner }) => {
+  const handleApprove = async (agentId) => {
+    try {
+      await lcApi.approveAgent(agentId);
+      notificationSystem.add(formatNotification("Invitation has been sent"));
+    } catch (error) {
+      notificationSystem.add(formatNotification("An error occured", "error"));
+    }
+  };
+
+  const handleOnAgentDenied = (agentId) => {
+    lcApi.deleteAgent(agentId);
+  };
+
   return (
     <div>
-    <div css={headerStyles}>{header}</div>
-    <div css={rowStyles}>
+      <div css={headerStyles}>{header}</div>
+      <div css={rowStyles}>
         <div css={nameCellStyles}>NAME</div>
         <div css={emailStyles}>EMAIL</div>
         <div css={rolesStyles}>PRODUCT ROLES</div>
@@ -93,27 +107,26 @@ const headerStyles = css`
               </Badge>
             </div>
 
-            <div css={actionsStyles}>
-              <Button onClick={() => onApprove(agent.id)}>
-                Approve
-              </Button>
+            {isOwner && (
+              <div css={actionsStyles}>
+                <Button onClick={() => handleApprove(agent.id)}>Approve</Button>
 
-              <Button
-                kind="text"
-                css={denyButtonStyles}
-                onClick={() => onDelete(agent.id)}
-              >
-                Deny
-              </Button>
-            </div>
+                <Button
+                  kind="text"
+                  css={denyButtonStyles}
+                  onClick={() => handleOnAgentDenied(agent.id)}
+                >
+                  Deny
+                </Button>
+              </div>
+            )}
           </div>
 
           <Divider css={dividerStyles} />
         </>
       ))}
-      </div>
-  )
+    </div>
+  );
+};
 
-}
-
-export default AgentList;
+export default notificationConnect(AgentList);

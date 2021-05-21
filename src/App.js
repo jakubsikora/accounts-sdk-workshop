@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { css, jsx } from "@emotion/react";
+import { NotificationProvider, ToastConsumer } from "@livechat/design-system";
 /** @jsx jsx */
 import useAuth from "./hooks/useAuth";
 import lcApi from "./api/lc";
-import AgentList from './components/AgentList/AgentList';
+import AgentList from "./components/AgentList/AgentList";
 
 const App = () => {
-  const {
-    isLoggedIn,
-    isLoggingIn,
-    authorizeWithRedirect,
-    data,
-    isOwner,
-  } = useAuth();
+  const { isLoggedIn, isLoggingIn, authorizeWithRedirect, data, isOwner } =
+    useAuth();
   const [agentsForApproval, setAgentsForApproval] = useState([]);
   const [approvedAgents, setApprovedAgents] = useState([]);
 
@@ -20,8 +16,8 @@ const App = () => {
     const initData = async () => {
       try {
         const agents = await lcApi.getAgents();
-        setAgentsForApproval(agents.filter(agent => agent.awaiting_approval));
-        setApprovedAgents(agents.filter(agent => !agent.awaiting_approval));
+        setAgentsForApproval(agents.filter((agent) => agent.awaiting_approval));
+        setApprovedAgents(agents.filter((agent) => !agent.awaiting_approval));
       } catch (error) {
         console.log("initData error", error);
         setAgentsForApproval([]);
@@ -53,21 +49,24 @@ const App = () => {
     return "Error";
   }
 
-  const handleButtonClick = (agentId) => {
-    lcApi.approveAgent(agentId);
-  };
-  
-  const handleOnAgentDenied = (agentId) => {
-    lcApi.deleteAgent(agentId);
-  };
-
   return (
-    <div className="App">
-    <AgentList agents={agentsForApproval} header={'Waiting for approval'} onApprove={handleButtonClick} onDelete={handleOnAgentDenied} isOwner={isOwner}/>
-    <AgentList agents={approvedAgents} header={'All'}/>
-      
-      {isOwner && <p>Logged in as owner</p>}
-    </div>
+    <NotificationProvider>
+      <ToastConsumer horizontalPosition="center" fixed verticalPosition="top" />
+
+      <div className="App">
+        {isOwner && (
+          <AgentList
+            agents={agentsForApproval}
+            header={"Waiting for approval"}
+            isOwner
+          />
+        )}
+
+        <AgentList agents={approvedAgents} header={"All"} />
+
+        {isOwner && <p>Logged in as owner</p>}
+      </div>
+    </NotificationProvider>
   );
 };
 

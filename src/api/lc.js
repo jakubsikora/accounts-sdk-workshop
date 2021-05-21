@@ -20,7 +20,7 @@ const api = {
 
       return data;
     } catch (error) {
-      console.log("getAgents error", error);
+      throw error;
     }
   },
   async approveAgent(agentId) {
@@ -33,7 +33,7 @@ const api = {
       );
       return data;
     } catch (error) {
-      console.log("approveAgent error", error);
+      throw error;
     }
   },
   async deleteAgent(agentId) {
